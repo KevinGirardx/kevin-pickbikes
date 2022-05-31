@@ -7,3 +7,4 @@
 # Depedencies
 - qb-target
 
+My Discord : https://discord.gg/SCnKXKN7cA
