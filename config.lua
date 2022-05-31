@@ -1,13 +1,14 @@
 Config = Config or {}
 
-Config.DropBikeKey = 'G'
+Config.Interaction = "qb" --qb/target (you dont need to put  target if you want to use target, can just leave blank)
+Config.InteractKey = 'G'
 Config.DrawTextPosition = "left"
 Config.Bikes = {
-    "bmx",
-    "tribike3",
-    "fixter",
-    "cruiser",
-    "tribike", 
-    "tribike2",
-    "scorcher"
+    `bmx`,
+    `tribike3`,
+    `fixter`,
+    `cruiser`,
+    `scorcher`,
+    `tribike2`,
+    `tribike`,
 }

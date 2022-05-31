@@ -2,34 +2,66 @@ local QBCore = exports['qb-core']:GetCoreObject()
 
 local hasbike = false
 
-CreateThread(function ()
-	exports['qb-target']:AddTargetModel(Config.Bikes, {
-		options = {
-		{
-			type = "client",
-			event = "kevin-pickbikes:client:takeup",
-			icon = "fas fa-bicycle",
-			label = "Pick Up",
-		}
-	},
-		distance = 1.5,
-	})
+CreateThread( function ()
+	while true do
+		if Config.Interaction == "qb" then
+			local ped = PlayerPedId()
+			local pos = GetEntityCoords(ped)
+			bike = QBCore.Functions.GetClosestVehicle()
+			for k, v in pairs(Config.Bikes) do
+				if GetEntityModel(bike) == v then
+					local bikepos = GetEntityCoords(bike)
+                    local dist = #(pos - bikepos)
+                    if dist <= 1.5 then
+						if not IsPedInAnyVehicle(ped, false) and not hasbike then
+							exports['qb-core']:DrawText("["..Config.InteractKey.."] Pick Up", Config.DrawTextPosition)
+							if IsControlPressed(0, 38) and not hasbike then
+								RequestAnimDict("anim@heists@box_carry@")
+								while (not HasAnimDictLoaded("anim@heists@box_carry@")) do
+									Wait(1)
+								end
+								TaskPlayAnim(ped, "anim@heists@box_carry@" ,"idle", 5.0, -1, -1, 50, 0, false, false, false)
+								AttachEntityToEntity(bike, ped, GetPedBoneIndex(player, 60309), 0.0, 0.35, 0.160, 180.0, 170.0, 90.0, true, false, false, true, 0, true)
+								hasbike = true
+								exports['qb-core']:ChangeText("["..Config.InteractKey.."] Drop ", Config.DrawTextPosition)
+							end
+						end
+					else
+						exports['qb-core']:HideText()
+					end
+				end
+			end
+		else
+			exports['qb-target']:AddTargetModel(Config.Bikes, {
+				options = {
+				{
+					type = "client",
+					event = "kevin-pickbikes:client:takeup",
+					icon = "fas fa-bicycle",
+					label = "Pick Up",
+				}
+			},
+				distance = 2.0,
+			})
+		end
+		Wait(1000)
+	end
 end)
 
 RegisterNetEvent("kevin-pickbikes:client:takeup", function ()
     local ped = PlayerPedId()
-	local pos = GetEntityCoords(ped)
 	bike = QBCore.Functions.GetClosestVehicle()
-	if GetHashKey(bike) then
-		print(bike)
-		RequestAnimDict("anim@heists@box_carry@")
-		while (not HasAnimDictLoaded("anim@heists@box_carry@")) do
-			Wait(1)
+	for k, v in pairs(Config.Bikes) do
+		if GetEntityModel(bike) == v then
+			RequestAnimDict("anim@heists@box_carry@")
+			while (not HasAnimDictLoaded("anim@heists@box_carry@")) do
+				Wait(1)
+			end
+			TaskPlayAnim(ped, "anim@heists@box_carry@" ,"idle", 5.0, -1, -1, 50, 0, false, false, false)
+			AttachEntityToEntity(bike, ped, GetPedBoneIndex(player, 60309), 0.0, 0.35, 0.160, 180.0, 170.0, 90.0, true, false, false, true, 0, true)
+			hasbike = true
+			exports['qb-core']:DrawText("["..Config.InteractKey.."] Drop ", Config.DrawTextPosition)
 		end
-		TaskPlayAnim(ped, "anim@heists@box_carry@" ,"idle", 5.0, -1, -1, 50, 0, false, false, false)
-		AttachEntityToEntity(bike, ped, GetPedBoneIndex(player, 60309), 0.0, 0.35, 0.160, 180.0, 170.0, 90.0, true, false, true, true, 0, true)
-		hasbike = true
-		exports['qb-core']:DrawText("[G] Drop Bike", Config.DrawTextPosition)
 	end
 end)
 
@@ -43,4 +75,4 @@ RegisterCommand('dropbike', function()
 	end
 end)
 
-RegisterKeyMapping('dropbike', 'Drop Bike', 'keyboard', Config.DropBikeKey)
+RegisterKeyMapping('dropbike', 'Drop Bike', 'keyboard', Config.InteractKey)
