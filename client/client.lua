@@ -2,6 +2,7 @@ local QBCore = exports['qb-core']:GetCoreObject()
 
 local hasbike = false
 local closebike = false
+
 CreateThread( function ()
 	while true do
 		if Config.Interaction == "qb" then
@@ -46,7 +47,7 @@ function PressedKey()
 		while not hasbike do
 			local ped = PlayerPedId()
 			if IsControlJustReleased(0, 38) then
-				print('pressed')
+				-- print('pressed')
 				RequestAnimDict("anim@heists@box_carry@")
 				while (not HasAnimDictLoaded("anim@heists@box_carry@")) do
 					Wait(1)
@@ -84,6 +85,7 @@ RegisterCommand('dropbike', function()
 		ClearPedTasks(PlayerPedId())
 		hasbike = false
 		closebike = false
+		exports['qb-core']:HideText()
 	end
 end)
 
