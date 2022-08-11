@@ -4,8 +4,8 @@ local hasbike = false
 local closebike = false
 
 CreateThread( function ()
-	while true do
-		if Config.Interaction == "qb" then
+	if Config.Interaction == "qb" then
+		while true do
 			local ped = PlayerPedId()
 			local pos = GetEntityCoords(ped)
 			bike = QBCore.Functions.GetClosestVehicle()
@@ -25,20 +25,20 @@ CreateThread( function ()
 					end
 				end
 			end
-		else
-			exports['qb-target']:AddTargetModel(Config.Bikes, {
-				options = {
-				{
-					type = "client",
-					event = "kevin-pickbikes:client:takeup",
-					icon = "fas fa-bicycle",
-					label = "Pick Up",
-				}
-			},
-				distance = 2.0,
-			})
+			Wait(1000)
 		end
-		Wait(1000)
+	else
+		exports['qb-target']:AddTargetModel(Config.Bikes, {
+			options = {
+			{
+				type = "client",
+				event = "kevin-pickbikes:client:takeup",
+				icon = "fas fa-bicycle",
+				label = "Pick Up",
+			}
+		},
+			distance = 2.0,
+		})
 	end
 end)
 
